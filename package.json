@@ -1,0 +1,20 @@
+{
+  "name": "binaural-radio-drama",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "广播剧双耳混音工具：俯视图编排 + 参数化 HRTF + 房间反射/混响，离线渲染与实时监听共用同一引擎",
+  "scripts": {
+    "build": "tsc -p tsconfig.json && npm run bundle:worklet && npm run bundle:main",
+    "bundle:worklet": "node scripts/bundle-worklet.mjs dist/browser/binaural-worklet.js public/binaural-worklet.js",
+    "bundle:main": "node scripts/bundle-worklet.mjs dist/browser/main.js public/main.js",
+    "test": "node --test \"dist/tests/*.test.js\"",
+    "demo": "node dist/node/demo.js",
+    "render": "node dist/node/render.js",
+    "serve": "node dist/node/server.js"
+  },
+  "devDependencies": {
+    "@types/node": "^22.9.0",
+    "typescript": "5.6.3"
+  }
+}

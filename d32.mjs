@@ -1,0 +1,10 @@
+import { WavWriter } from './dist/io/wavWriter.js';
+import { WavFileSource } from './dist/io/wavReader.js';
+const w = new WavWriter('t32.wav', 48000, 32);
+const L = new Float32Array(4).fill(0.4), R = new Float32Array(4).fill(0.3);
+w.writeStereo(L,R); w.close();
+const s = new WavFileSource('x','t32.wav');
+const out = new Float32Array(4); s.readBlock(0,4,out);
+console.log('读回:', [...out].map(x=>x.toFixed(5)), '预期下混 0.35');
+console.log('fmt audioFormat:', require('node:fs').readFileSync('t32.wav').readUInt16LE(20));
+s.close();

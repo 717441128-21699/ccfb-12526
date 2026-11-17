@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>广播剧双耳混音工作台</title>
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <h1>广播剧双耳混音工作台</h1>
+    <div class="transport">
+      <button id="enableAudio" class="primary">启用实时监听</button>
+      <button id="play">播放</button>
+      <button id="stop">停止</button>
+      <label>时间 <input id="time" type="number" step="0.1" value="0" min="0" /> s</label>
+    </div>
+  </header>
+
+  <main class="layout">
+    <section class="stage">
+      <canvas id="topview"></canvas>
+      <div class="hint">
+        拖动声源/听者移动 · Alt+拖动听者改朝向 · 双击加/删关键帧 · 滚轮缩放 · Shift+拖动平移
+      </div>
+    </section>
+
+    <aside class="sidebar">
+      <h2>声部</h2>
+      <div id="tracks" class="tracks"></div>
+      <div class="io">
+        <button id="importAudio">导入音频素材</button>
+        <input id="audioFile" type="file" accept=".wav,audio/*" hidden />
+        <button id="export" class="primary">导出工程 JSON</button>
+      </div>
+      <p id="status" class="status"></p>
+      <div class="legend">
+        <h3>图例</h3>
+        <ul>
+          <li><span class="swatch" style="background:#ffd166"></span>听者 / 选中</li>
+          <li><span class="swatch" style="background:#4f8fe8"></span>语音声部</li>
+          <li><span class="swatch" style="background:#46b882"></span>环境声部</li>
+          <li><span class="swatch" style="background:#9a7b4f"></span>隔墙</li>
+          <li><span class="swatch" style="background:#5a82d6"></span>室内区域</li>
+          <li><span class="swatch" style="background:#4fae7a"></span>室外区域</li>
+        </ul>
+      </div>
+    </aside>
+  </main>
+
+  <script type="module" src="./main.js"></script>
+</body>
+</html>
