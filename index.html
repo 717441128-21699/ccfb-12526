@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>广播剧双耳混音台</title>
+  <style>
+    :root {
+      --bg: #14161a; --panel: #1d2026; --line: #2c313a;
+      --text: #d8dce3; --dim: #8a919d; --accent: #4da3ff;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; background: var(--bg); color: var(--text);
+      font: 13px/1.5 "Segoe UI", "Microsoft YaHei", sans-serif;
+      display: flex; flex-direction: column; height: 100vh; overflow: hidden;
+    }
+    header {
+      display: flex; align-items: center; gap: 8px;
+      padding: 6px 12px; background: var(--panel); border-bottom: 1px solid var(--line);
+      flex: 0 0 auto;
+    }
+    header .title { font-weight: 600; margin-right: 12px; }
+    button {
+      background: #262b33; color: var(--text); border: 1px solid var(--line);
+      border-radius: 4px; padding: 4px 10px; cursor: pointer; font-size: 12px;
+    }
+    button:hover { border-color: var(--accent); }
+    button.active { background: var(--accent); color: #0b1420; border-color: var(--accent); }
+    button:disabled { opacity: .4; cursor: default; }
+    main { display: flex; flex: 1 1 auto; min-height: 0; }
+    #stage { flex: 1 1 auto; position: relative; min-width: 0; }
+    #stageCanvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+    aside {
+      flex: 0 0 260px; background: var(--panel); border-left: 1px solid var(--line);
+      padding: 10px; overflow-y: auto;
+    }
+    aside h3 { margin: 8px 0 6px; font-size: 12px; color: var(--dim); text-transform: uppercase; }
+    aside label { display: block; margin: 6px 0 2px; color: var(--dim); font-size: 12px; }
+    aside input, aside select {
+      width: 100%; background: #14171c; color: var(--text);
+      border: 1px solid var(--line); border-radius: 4px; padding: 4px 6px; font-size: 12px;
+    }
+    footer {
+      flex: 0 0 auto; background: var(--panel); border-top: 1px solid var(--line);
+      padding: 6px 12px; display: flex; flex-direction: column; gap: 4px;
+    }
+    #timeline { width: 100%; height: 64px; display: block; cursor: crosshair; }
+    .row { display: flex; align-items: center; gap: 8px; }
+    .hint { color: var(--dim); font-size: 11px; }
+    #status { color: var(--dim); }
+    kbd { background:#262b33; border:1px solid var(--line); border-radius:3px; padding:0 4px; font-size:11px; }
+  </style>
+</head>
+<body>
+  <header>
+    <span class="title">🎧 双耳混音台</span>
+    <button id="toolSelect" class="active">选择/移动</button>
+    <button id="toolAddSource">+ 声源</button>
+    <button id="toolWall">+ 墙体</button>
+    <button id="toolListener">摆听者</button>
+    <span style="width:12px"></span>
+    <button id="btnRecordPath">● 录路径</button>
+    <span style="width:12px"></span>
+    <button id="btnPlay">▶ 预览</button>
+    <button id="btnRender">渲染整集</button>
+    <button id="btnPlayRender" disabled>▶ 听渲染</button>
+    <button id="btnDownload" disabled>下载 WAV</button>
+    <span id="status" style="margin-left:auto"></span>
+  </header>
+  <main>
+    <div id="stage"><canvas id="stageCanvas"></canvas></div>
+    <aside id="panel">
+      <h3>选中对象</h3>
+      <div id="selInfo" class="hint">未选中</div>
+      <div id="srcProps" hidden>
+        <label>名称</label><input id="pName" />
+        <label>音量 <span id="pGainV"></span></label>
+        <input id="pGain" type="range" min="0" max="2" step="0.01" />
+        <label>高度（米，耳平面以上）</label><input id="pElev" type="number" step="0.1" />
+        <label>朝向（度，0=朝图上方向）</label><input id="pFacing" type="number" step="5" />
+        <label>入场时间（秒）</label><input id="pStart" type="number" step="0.1" min="0" />
+        <label><input id="pLoop" type="checkbox" style="width:auto" /> 循环播放</label>
+        <label>音频文件</label><input id="pFile" type="file" accept="audio/*" />
+      </div>
+      <h3>声学场景</h3>
+      <div id="sceneInfo" class="hint"></div>
+      <label>当前时间场景</label>
+      <select id="sceneSelect"></select>
+      <div class="hint" style="margin-top:8px">
+        操作提示：<br>
+        · 拖动声源 = 在当前时间打关键帧<br>
+        · <kbd>Shift</kbd>+上下拖 = 调高度<br>
+        · 录路径：播放中拖动声源自动采样<br>
+        · 双击声源路径点 = 删除该关键帧<br>
+        · 听者朝向：选中听者后拖动旋转
+      </div>
+    </aside>
+  </main>
+  <footer>
+    <canvas id="timeline"></canvas>
+    <div class="row">
+      <span id="timeLabel">00:00.0</span>
+      <span class="hint">点击时间轴跳转 · 场景切换处混响自动平滑过渡</span>
+    </div>
+  </footer>
+  <script type="module" src="/src/main.ts"></script>
+</body>
+</html>
